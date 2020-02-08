@@ -21,3 +21,11 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/CultivoEAR/nbproject/private/
+/CultivoWAR/nbproject/private/
+/CultivoEJB/nbproject/private/
+/CultivoEJB/build/
+/CultivoEJB/dist/
+/CultivoWAR/build/
+/CultivoEAR/build/
+/CultivoWAR/dist/
