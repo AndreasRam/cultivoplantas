@@ -7,6 +7,7 @@ package cl.senpai.cultivoEjb.dto;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,13 +25,14 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "plantas")
 @NamedQueries({
-    @NamedQuery(name = "Planta.findAll()", query = "SELECT p FROM Planta p")
+    @NamedQuery(name = "Planta.findAll", query = "SELECT p FROM Planta p")
 })
 public class Planta implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "humendad")
     private double humedad;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar fecha;

@@ -19,7 +19,7 @@ import javax.persistence.Persistence;
 @Stateless
 public class PlantasDAO implements PlantasDAOLocal {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("CultivoEJBPU");
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("CultivoEJBPU");
 
     @Override
     public List<Planta> findAll() {
@@ -28,6 +28,7 @@ public class PlantasDAO implements PlantasDAOLocal {
         try {
             return em.createNamedQuery("Planta.findAll", Planta.class).getResultList();
         } catch (Exception e) {
+            System.out.println(e);
             return null;
         }finally{
             em.close();
@@ -46,6 +47,40 @@ public class PlantasDAO implements PlantasDAOLocal {
         
         }finally{
             em.close();
+        }
+        
+    }
+
+    @Override
+    public void remove(Planta p) {
+    
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.remove(em.find(Planta.class, p.getId()));
+            em.flush();
+        } catch (Exception e) {
+        
+        }finally{
+            em.close();
+        }
+        
+    }
+
+    @Override
+    public void removeAll() {
+    
+        EntityManager em = emf.createEntityManager();
+        try {
+            //Con jpa se usa createQuerry o createNamedQuerry - Recomendado por independencia al motor
+            em.createQuery("DELETE FROM Planta").executeUpdate();
+            em.flush();
+            
+            //Con sql se usa createNativeQuerry
+            //em.createNativeQuery("DELETE FROM plantas");
+        } catch (Exception e) {
+        
+        }finally{
+            
         }
         
     }

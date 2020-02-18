@@ -2,26 +2,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Sistema de monitoreo de plantas</title>
     </h:head>
     <h:body>
         <h:form id="formulario">
+            <p:growl id="mensajes"/>
+            <p:poll interval="5" listener="#{plantasManagedBean.cargarGrafico()}" update="panel-grafico tabla-medidas" />
+            
             <h:panelGroup layout="block">
                 <p:panelGrid layout="grid" columns="2">
                     <p:panel header="Registrar Humedad">
-
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Fecha"/>
+                            <p:calendar value="#{plantasManagedBean.fechaDeMedida}" 
+                                        pattern="dd-MM-yyyy HH:mm:ss" />
+                            
+                            <p:outputLabel value="Humedad"/>  
+                            <p:inputNumber value="#{plantasManagedBean.valorHumedad}"
+                                           decimalPlaces="2"
+                                           thousandSeparator=""
+                                           minValue="-100"
+                                           maxValue="100"/>
+                            
+                            <p:commandButton value="Registrar Medida" 
+                                             update="panel-grafico tabla-medidas mensajes"
+                                             actionListener="#{plantasManagedBean.registrarMedida}"/>
+                        </h:panelGrid>
                     </p:panel>
                     <p:panel header="Medidas Registradas">
-                        <p:dataTable>
-
+                        <p:dataTable id="tabla-medidas" value="#{plantasManagedBean.registros}" var="planta" stickyHeader="true" scrollable="true" scrollHeight="500px">
+                            <p:column headerText="Fecha">
+                                <h:outputText value="#{planta.fecha.time}">
+                                    <f:convertDateTime type="both" dateStyle="long"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Humedad">
+                                <h:outputText value="#{planta.humedad}" />
+                            </p:column>
+                            <p:column headerText="Acciones">
+                                <p:commandLink value="Descartar" 
+                                               update=":formulario:panel-grafico tabla-medidas" 
+                                               actionListener="#{plantasManagedBean.remove(planta)}"/>
+                            </p:column>
                         </p:dataTable>
                     </p:panel>
                 </p:panelGrid>
             </h:panelGroup>
             <h:panelGroup layout="block">
-                <p:chart type="line" model="#{plantasManagedBean.modeloGrafico}" style="height: 600px">
+                <p:chart id="panel-grafico" type="line" model="#{plantasManagedBean.modeloGrafico}" style="height: 600px">
                     
                 </p:chart>
             </h:panelGroup>
